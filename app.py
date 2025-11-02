@@ -3,10 +3,9 @@ import numpy as np
 import librosa
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-import cv2
 
 # -------------------- Load trained model --------------------
-MODEL_PATH = r"C:\Users\Amrutha\Downloads\for-2sec\final_crnn_bilstm.h5"   # Make sure this file is in same folder
+MODEL_PATH =  r"C:\Users\Amrutha\Downloads\for-2sec\final_crnn_bilstm.h5"
 model = load_model(MODEL_PATH)
 
 # -------------------- Preprocessing function --------------------
@@ -17,10 +16,15 @@ def preprocess_audio(audio_path):
     log_mel = librosa.power_to_db(mel, ref=np.max)
     log_mel = (log_mel - log_mel.min()) / (log_mel.max() - log_mel.min())
 
-    # Resize if not exact shape (63 time frames)
+    # Resize using NumPy if needed
     if log_mel.shape[1] != 63:
-        log_mel = cv2.resize(log_mel, (63, 128))
+        log_mel = np.interp(
+            np.linspace(0, log_mel.shape[1], 63),
+            np.arange(log_mel.shape[1]),
+            log_mel,
+        )
 
+    log_mel = log_mel[:, :63]  # trim excess (safe-guard)
     return log_mel[np.newaxis, :, :, np.newaxis].astype(np.float32)
 
 # -------------------- Streamlit UI --------------------
