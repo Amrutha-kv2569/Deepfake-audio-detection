@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 import cv2
 
 # -------------------- Load trained model --------------------
-MODEL_PATH = "C:\Users\Amrutha\Downloads\for-2sec\final_crnn_bilstm.h5"   # Make sure this file is in same folder
+MODEL_PATH = r"C:\Users\Amrutha\Downloads\for-2sec\final_crnn_bilstm.h5"   # Make sure this file is in same folder
 model = load_model(MODEL_PATH)
 
 # -------------------- Preprocessing function --------------------
